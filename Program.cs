@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using TempHumidityBackend.Data;
-using TempHumidityBackend.Services;
 
 namespace TempHumidityBackend;
 
@@ -22,7 +22,8 @@ class Program
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError("{}", e.Message);
         }
     }
 
@@ -31,8 +32,8 @@ class Program
         return Host.CreateDefaultBuilder()
             .ConfigureServices((builder, services) => 
             {
-                services.AddSingleton<ITempHumidityService, TempHumidityService>();
                 services.AddSingleton<App>();
+                services.AddLogging(config => config.AddConsole());
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseNpgsql(builder.Configuration.GetConnectionString("ApplicationConnection")));
             })

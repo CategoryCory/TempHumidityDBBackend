@@ -1,19 +1,34 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using TempHumidityBackend.Data;
 using TempHumidityBackend.Helpers;
 
 namespace TempHumidityBackend;
 
-public static class UDPService
+public class UDPService
 {
-    public static async Task StartUDPListener(int listenPort, AppDbContext dbContext)
+    private readonly AppDbContext _dbContext;
+    private readonly ILogger<UDPService> _logger;
+    private readonly IServiceProvider _services;
+
+    public UDPService(IServiceProvider services)
+    {
+        // _dbContext = dbContext;
+        _services = services;
+
+        _dbContext = _services.GetRequiredService<AppDbContext>();
+        _logger = _services.GetRequiredService<ILogger<UDPService>>();
+    }
+
+    public async Task StartUDPListener(int listenPort)
     {
         using var listener = new UdpClient(listenPort);
 
         var groupEndpoint = new IPEndPoint(IPAddress.Any, listenPort);
-        Console.WriteLine($"Listening on port {listenPort}...");
+        _logger.LogInformation("Listening on port {}...", listenPort);
 
         try
         {
@@ -21,12 +36,12 @@ public static class UDPService
             {
                 byte[] receivedBytes = listener.Receive(ref groupEndpoint);
 
-                Console.WriteLine($"Received {receivedBytes.Length} bytes from {groupEndpoint}");
+                _logger.LogInformation("Received {} bytes from {}", receivedBytes.Length, groupEndpoint);
 
                 byte[] ackBytes = Encoding.ASCII.GetBytes("ACK");
                 listener.Send(ackBytes, ackBytes.Length, groupEndpoint);
 
-                Console.WriteLine("ACK sent.");
+                _logger.LogInformation("ACK sent.");
 
                 var decodedData = CborHelper.DecodeAHT20CborData(receivedBytes);
 
@@ -34,21 +49,21 @@ public static class UDPService
                 {
                     var readingToAdd = Mappers.AHT20ReadingToTempHumidityModel(decodedData.Value!);
 
-                    dbContext.TempHumidities.Add(readingToAdd);
-                    await dbContext.SaveChangesAsync();
+                    _dbContext.TempHumidities.Add(readingToAdd);
+                    await _dbContext.SaveChangesAsync();
 
-                    Console.WriteLine("Message saved to database.\n");
+                    _logger.LogInformation("Message saved to database.");
                 }
                 else
                 {
-                    Console.WriteLine(decodedData.ErrorMessage);
-                    Console.WriteLine("No data saved to database.");
+                    _logger.LogWarning("{}", decodedData.ErrorMessage);
+                    _logger.LogWarning("No messages saved.");
                 }
             }
         }
         catch (SocketException e)
         {
-            Console.WriteLine($"An error occurred when trying to establish socket:\n{e.Message}");
+            _logger.LogError("An error occurred when trying to establish socket:\n{}", e.Message);
         }
     }
 }
