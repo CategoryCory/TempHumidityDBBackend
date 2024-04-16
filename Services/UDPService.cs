@@ -30,12 +30,20 @@ public static class UDPService
 
                 var decodedData = CborHelper.DecodeAHT20CborData(receivedBytes);
 
-                var readingToAdd = Mappers.AHT20ReadingToTempHumidityModel(decodedData);
+                if (decodedData.HasValue)
+                {
+                    var readingToAdd = Mappers.AHT20ReadingToTempHumidityModel(decodedData.Value!);
 
-                dbContext.TempHumidities.Add(readingToAdd);
-                await dbContext.SaveChangesAsync();
+                    dbContext.TempHumidities.Add(readingToAdd);
+                    await dbContext.SaveChangesAsync();
 
-                Console.WriteLine("Message saved to database.\n");
+                    Console.WriteLine("Message saved to database.\n");
+                }
+                else
+                {
+                    Console.WriteLine(decodedData.ErrorMessage);
+                    Console.WriteLine("No data saved to database.");
+                }
             }
         }
         catch (SocketException e)
