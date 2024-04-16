@@ -32,7 +32,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.RelHumidity).HasColumnName("rel_humidity");
             entity.Property(e => e.TempC).HasColumnName("temp_c");
-            entity.Property(e => e.Timestamp).HasColumnName("timestamp");
+            entity.Property(e => e.ReadAt).HasColumnName("read_at");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -11,5 +11,5 @@ public partial class TempHumidity
 
     public float? RelHumidity { get; set; }
 
-    public long? Timestamp { get; set; }
+    public DateTime? ReadAt { get; set; }
 }
