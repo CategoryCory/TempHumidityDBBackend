@@ -1,26 +1,21 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TempHumidityBackend.Data;
 using TempHumidityBackend.Helpers;
 
 namespace TempHumidityBackend;
 
-public class UDPService
+public class UDPService : IUDPService
 {
     private readonly AppDbContext _dbContext;
     private readonly ILogger<UDPService> _logger;
-    private readonly IServiceProvider _services;
 
-    public UDPService(IServiceProvider services)
+    public UDPService(AppDbContext dbContext, ILogger<UDPService> logger)
     {
-        // _dbContext = dbContext;
-        _services = services;
-
-        _dbContext = _services.GetRequiredService<AppDbContext>();
-        _logger = _services.GetRequiredService<ILogger<UDPService>>();
+        _dbContext = dbContext;
+        _logger = logger;
     }
 
     public async Task StartUDPListener(int listenPort)

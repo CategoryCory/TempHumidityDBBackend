@@ -1,23 +1,21 @@
 ﻿using Microsoft.Extensions.Configuration;
-using TempHumidityBackend.Data;
 
 namespace TempHumidityBackend;
 
 public class App
 {
+    private readonly IUDPService _udpService;
     private readonly IConfiguration _config;
-    private readonly IServiceProvider _services;
 
-    public App(IConfiguration config, IServiceProvider services)
+    public App(IUDPService udpService, IConfiguration config)
     {
+        _udpService = udpService;
         _config = config;
-        _services = services;
     }
 
     public async Task Run(string[] args)
     {
         int udpPort = _config.GetValue<int>("UDPPort");
-        var udpService = new UDPService(_services);
-        await udpService.StartUDPListener(udpPort);
+        await _udpService.StartUDPListener(udpPort);
     }
 }

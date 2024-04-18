@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TempHumidityBackend.Models;
+﻿namespace TempHumidityBackend.Models;
 
 public partial class TempHumidity
 {

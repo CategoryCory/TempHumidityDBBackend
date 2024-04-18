@@ -36,6 +36,7 @@ class Program
                 services.AddLogging(config => config.AddConsole());
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseNpgsql(builder.Configuration.GetConnectionString("ApplicationConnection")));
+                services.AddTransient<IUDPService, UDPService>();
             })
             .ConfigureAppConfiguration(app => 
             {
