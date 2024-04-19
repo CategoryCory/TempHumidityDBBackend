@@ -1,4 +1,4 @@
-﻿namespace TempHumidityBackend;
+﻿namespace TempHumidityBackend.Types;
 
 public sealed class CBORDecodeResult<TResult> where TResult : class
 {

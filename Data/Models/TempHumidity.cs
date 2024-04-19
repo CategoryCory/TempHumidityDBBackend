@@ -1,4 +1,4 @@
-﻿namespace TempHumidityBackend.Models;
+﻿namespace TempHumidityBackend.Data.Models;
 
 public partial class TempHumidity
 {

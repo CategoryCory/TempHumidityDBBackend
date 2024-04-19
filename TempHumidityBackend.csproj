@@ -33,9 +33,11 @@
 
   <ItemGroup>
     <Folder Include="Data/" />
-    <Folder Include="Helpers/" />
-    <Folder Include="Map/" />
-    <Folder Include="Models/" />
+    <Folder Include="Data/Models/" />
+    <Folder Include="Handlers/" />
+    <Folder Include="Maps/" />
+    <Folder Include="Services/" />
+    <Folder Include="Types/" />
   </ItemGroup>
 
 </Project>

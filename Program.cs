@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TempHumidityBackend.Data;
+using TempHumidityBackend.Services;
 
 namespace TempHumidityBackend;
 
@@ -36,7 +37,11 @@ class Program
                 services.AddLogging(config => config.AddConsole());
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseNpgsql(builder.Configuration.GetConnectionString("ApplicationConnection")));
+
                 services.AddTransient<IUDPService, UDPService>();
+                services.AddTransient<ICBORDecodeService, CBORDecodeService>();
+                services.AddTransient<ITempHumidityService, TempHumidityService>();
+                services.AddKeyedTransient<IDataHandler, AHT20DataHandler>("aht20");
             })
             .ConfigureAppConfiguration(app => 
             {

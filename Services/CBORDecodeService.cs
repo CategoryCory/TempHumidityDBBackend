@@ -1,10 +1,15 @@
-using System.Formats.Cbor;
+﻿using System.Formats.Cbor;
+using TempHumidityBackend.Types;
 
-namespace TempHumidityBackend.Helpers;
+namespace TempHumidityBackend;
 
-static class CborHelper
+public class CBORDecodeService : ICBORDecodeService
 {
-    public static CBORDecodeResult<AHT20ReadingModel> DecodeAHT20CborData(byte[] encodedBytes)
+    public CBORDecodeService()
+    {
+    }
+
+    public CBORDecodeResult<AHT20Reading> DecodeAHT20Data(byte[] encodedBytes)
     {
         try
         {
@@ -26,14 +31,14 @@ static class CborHelper
 
             cborReader.ReadEndMap();
 
-            var result = new AHT20ReadingModel 
+            var result = new AHT20Reading 
             {
                 TemperatureCelsius = tempValue,
                 RelativeHumidity = humidityValue,
                 EpochTimestamp = timestampValue
             };
 
-            return CBORDecodeResult<AHT20ReadingModel>.Success(result);
+            return CBORDecodeResult<AHT20Reading>.Success(result);
         }
         catch (Exception ex)
         {
@@ -46,7 +51,7 @@ static class CborHelper
                 _ => $"An error occurred while deserializing CBOR data:\n{ex.Message}"
             };
 
-            return CBORDecodeResult<AHT20ReadingModel>.Error(errorMessage);
+            return CBORDecodeResult<AHT20Reading>.Error(errorMessage);
         }
     }
 }

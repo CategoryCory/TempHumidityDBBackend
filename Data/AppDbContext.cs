@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TempHumidityBackend.Models;
+using TempHumidityBackend.Data.Models;
 
 namespace TempHumidityBackend.Data;
 
