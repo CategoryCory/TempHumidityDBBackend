@@ -6,12 +6,12 @@ namespace TempHumidityBackend.Services;
 
 public class TempHumidityService : ITempHumidityService
 {
-    private readonly AppDbContext _dbContext;
+    private readonly ITempHumidityData _tempHumidityData;
     private readonly ILogger<TempHumidityService> _logger;
 
-    public TempHumidityService(AppDbContext dbContext, ILogger<TempHumidityService> logger)
+    public TempHumidityService(ITempHumidityData tempHumidityData, ILogger<TempHumidityService> logger)
     {
-        _dbContext = dbContext;
+        _tempHumidityData = tempHumidityData;
         _logger = logger;
     }
 
@@ -19,10 +19,9 @@ public class TempHumidityService : ITempHumidityService
     {
         try
         {
-            _dbContext.TempHumidities.Add(tempHumidity);
-            await _dbContext.SaveChangesAsync();
+            int insertedRows = await _tempHumidityData.Insert(tempHumidity);
 
-            return true;
+            return insertedRows == 1;
         }
         catch (Exception ex)
         {

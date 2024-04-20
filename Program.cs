@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -35,8 +34,7 @@ class Program
             {
                 services.AddSingleton<App>();
                 services.AddLogging(config => config.AddConsole());
-                services.AddDbContext<AppDbContext>(options =>
-                    options.UseNpgsql(builder.Configuration.GetConnectionString("ApplicationConnection")));
+                services.AddTransient<ITempHumidityData, TempHumidityData>();
 
                 services.AddTransient<IUDPService, UDPService>();
                 services.AddTransient<ICBORDecodeService, CBORDecodeService>();
