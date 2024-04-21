@@ -32,6 +32,7 @@
     <Folder Include="Maps/" />
     <Folder Include="Services/" />
     <Folder Include="Types/" />
+    <Folder Include="Workers/" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TempHumidityBackend.Data;
@@ -9,41 +8,27 @@ namespace TempHumidityBackend;
 
 class Program
 {
-    static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
-        using IHost host = CreateHostBuilder(args).Build();
-        using var scope = host.Services.CreateScope();
+        var builder = Host.CreateApplicationBuilder(args);
 
-        var services = scope.ServiceProvider;
+        builder.Services.AddHostedService<UDPListenerWorker>();
+        builder.Services.AddLogging(config => config.AddConsole());
+        builder.Services.AddTransient<ITempHumidityData, TempHumidityData>();
+        builder.Services.AddTransient<ICBORDecodeService, CBORDecodeService>();
+        builder.Services.AddTransient<ITempHumidityService, TempHumidityService>();
+        builder.Services.AddKeyedTransient<IDataHandler, AHT20DataHandler>("aht20");
+
+        var host = builder.Build();
 
         try
         {
-            await services.GetRequiredService<App>().Run(args);
+            host.Run();    
         }
         catch (Exception e)
         {
-            var logger = services.GetRequiredService<ILogger<Program>>();
+            var logger = host.Services.GetRequiredService<ILogger<Program>>();
             logger.LogError("{}", e.Message);
         }
-    }
-
-    static IHostBuilder CreateHostBuilder(string[] str)
-    {
-        return Host.CreateDefaultBuilder()
-            .ConfigureServices((builder, services) => 
-            {
-                services.AddSingleton<App>();
-                services.AddLogging(config => config.AddConsole());
-                services.AddTransient<ITempHumidityData, TempHumidityData>();
-
-                services.AddTransient<IUDPService, UDPService>();
-                services.AddTransient<ICBORDecodeService, CBORDecodeService>();
-                services.AddTransient<ITempHumidityService, TempHumidityService>();
-                services.AddKeyedTransient<IDataHandler, AHT20DataHandler>("aht20");
-            })
-            .ConfigureAppConfiguration(app => 
-            {
-                app.AddJsonFile("appsettings.json");
-            });
     }
 }
