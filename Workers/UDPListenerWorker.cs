@@ -21,6 +21,7 @@ public class UDPListenerWorker : IUDPListenerWorker
     public async Task StartListener(CancellationToken stoppingToken, IDataHandler dataHandler)
     {
         int listenPort = _config.GetValue<int>("UDPPort");
+        ReadOnlyMemory<byte> ackBytes = Encoding.ASCII.GetBytes("ACK");
 
         using var listener = new UdpClient(listenPort);
 
@@ -31,16 +32,16 @@ public class UDPListenerWorker : IUDPListenerWorker
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                byte[] receivedBytes = listener.Receive(ref groupEndpoint);
+                // Listen for UDP message
+                var receivedUdpResult = await listener.ReceiveAsync(stoppingToken);
+                _logger.LogInformation("Received {} bytes from {}", receivedUdpResult.Buffer.Length, groupEndpoint);
 
-                _logger.LogInformation("Received {} bytes from {}", receivedBytes.Length, groupEndpoint);
-
-                byte[] ackBytes = Encoding.ASCII.GetBytes("ACK");
-                listener.Send(ackBytes, ackBytes.Length, groupEndpoint);
-
+                // Send acknowledgement when message is received
+                await listener.SendAsync(ackBytes, receivedUdpResult.RemoteEndPoint, stoppingToken);
                 _logger.LogInformation("ACK sent.");
 
-                await dataHandler.HandleData(receivedBytes);
+                // Call data handler for received message
+                await dataHandler.HandleData(receivedUdpResult.Buffer);
             }
         }
         catch (SocketException e)
