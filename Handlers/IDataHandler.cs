@@ -1,4 +1,4 @@
-﻿namespace TempHumidityBackend;
+﻿namespace TempHumidityBackend.Handlers;
 
 public interface IDataHandler
 {

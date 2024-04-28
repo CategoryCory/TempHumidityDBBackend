@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.Extensions.Logging;
 
-namespace TempHumidityBackend;
+namespace TempHumidityBackend.Handlers;
 
 public class AHT20DataHandler : IDataHandler
 {
