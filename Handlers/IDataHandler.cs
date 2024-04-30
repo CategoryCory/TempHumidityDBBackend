@@ -2,5 +2,5 @@
 
 public interface IDataHandler
 {
-    Task HandleData(byte[] data);
+    Task HandleData(byte[] data, CancellationToken cancellationToken = default);
 }

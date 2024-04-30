@@ -1,8 +1,8 @@
-﻿using TempHumidityBackend.Data.Models;
+﻿using TempHumidityBackend.Models;
 
 namespace TempHumidityBackend;
 
 public interface ITempHumidityService
 {
-    Task<bool> AddNewReading(TempHumidity tempHumidity);
+    Task<bool> AddNewReading(TempHumidity tempHumidity, CancellationToken cancellationToken = default);
 }

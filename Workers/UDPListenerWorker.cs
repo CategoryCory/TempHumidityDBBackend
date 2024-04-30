@@ -41,7 +41,7 @@ public class UDPListenerWorker : IUDPListenerWorker
                 _logger.LogInformation("ACK sent.");
 
                 // Call data handler for received message
-                await dataHandler.HandleData(receivedUdpResult.Buffer);
+                await dataHandler.HandleData(receivedUdpResult.Buffer, stoppingToken);
             }
         }
         catch (SocketException e)

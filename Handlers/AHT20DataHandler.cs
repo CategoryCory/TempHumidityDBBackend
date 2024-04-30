@@ -19,7 +19,7 @@ public class AHT20DataHandler : IDataHandler
         _logger = logger;
     }
 
-    public async Task HandleData(byte[] data)
+    public async Task HandleData(byte[] data, CancellationToken cancellationToken = default)
     {
         var decodedData = _cborDecodeService.DecodeAHT20Data(data);
 
@@ -27,11 +27,11 @@ public class AHT20DataHandler : IDataHandler
         {
             var readingToAdd = Mappers.AHT20ReadingToTempHumidityModel(decodedData.Value!);
 
-            var saveSucceeded = await _tempHumidityService.AddNewReading(readingToAdd);
+            var saveSucceeded = await _tempHumidityService.AddNewReading(readingToAdd, cancellationToken);
 
             if (saveSucceeded)
             {
-                _logger.LogInformation("Message saved to database.");
+                _logger.LogInformation("Message successfully saved.");
             }
             else
             {

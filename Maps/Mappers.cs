@@ -1,4 +1,4 @@
-﻿using TempHumidityBackend.Data.Models;
+﻿using TempHumidityBackend.Models;
 using TempHumidityBackend.Types;
 
 namespace TempHumidityBackend;
@@ -12,8 +12,8 @@ public static class Mappers
 
         return new TempHumidity
         {
-            TempC = reading.TemperatureCelsius,
-            RelHumidity = reading.RelativeHumidity,
+            TempCelsius = reading.TemperatureCelsius,
+            Humidity = reading.RelativeHumidity,
             ReadAt = readAt
         };
     }
