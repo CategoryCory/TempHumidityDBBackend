@@ -3,13 +3,13 @@ using TempHumidityBackend.Types;
 
 namespace TempHumidityBackend;
 
-public class CBORDecodeService : ICBORDecodeService
+public class AHT20DecodeService : ICBORDecodeService<AHT20Reading>
 {
-    public CBORDecodeService()
+    public AHT20DecodeService()
     {
     }
 
-    public CBORDecodeResult<AHT20Reading> DecodeAHT20Data(byte[] encodedBytes)
+    public CBORDecodeResult<AHT20Reading> DecodeData(byte[] encodedBytes)
     {
         try
         {
@@ -45,9 +45,9 @@ public class CBORDecodeService : ICBORDecodeService
             string errorMessage = ex switch
             {
                 ArgumentOutOfRangeException => $"An argument was out of range when deserializing CBOR data:\n{ex.Message}",
-                InvalidOperationException => $"An invalid operation occurred while deserializing CBOR data:\n{ex.Message}",
-                OverflowException => $"An overflow exception occurred while deserializing CBOR data:\n{ex.Message}",
-                CborContentException => $"A CBOR content error occurred while deserializing CBOR data:\n{ex.Message}",
+                InvalidOperationException   => $"An invalid operation occurred while deserializing CBOR data:\n{ex.Message}",
+                OverflowException           => $"An overflow exception occurred while deserializing CBOR data:\n{ex.Message}",
+                CborContentException        => $"A CBOR content error occurred while deserializing CBOR data:\n{ex.Message}",
                 _ => $"An error occurred while deserializing CBOR data:\n{ex.Message}"
             };
 

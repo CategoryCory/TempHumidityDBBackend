@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
 using TempHumidityBackend.Handlers;
 using TempHumidityBackend.Services;
+using TempHumidityBackend.Types;
 using TempHumidityBackend.Workers;
 
 namespace TempHumidityBackend;
@@ -16,7 +17,7 @@ class Program
 
         builder.Services.AddHostedService<App>();
 
-        builder.Services.AddTransient<ICBORDecodeService, CBORDecodeService>();
+        builder.Services.AddTransient<ICBORDecodeService<AHT20Reading>, AHT20DecodeService>();
         builder.Services.AddTransient<ITempHumidityService, TempHumidityService>();
         builder.Services.AddTransient<IUDPListenerWorker, UDPListenerWorker>();
         builder.Services.AddKeyedTransient<IDataHandler, AHT20DataHandler>("aht20");

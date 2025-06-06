@@ -2,7 +2,7 @@
 
 namespace TempHumidityBackend;
 
-public interface ICBORDecodeService
+public interface ICBORDecodeService<T> where T : class
 {
-    CBORDecodeResult<AHT20Reading> DecodeAHT20Data(byte[] encodedBytes);
+    CBORDecodeResult<T> DecodeData(byte[] encodedBytes);
 }

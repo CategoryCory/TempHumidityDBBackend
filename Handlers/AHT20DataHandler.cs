@@ -1,16 +1,17 @@
 ﻿
 using Microsoft.Extensions.Logging;
+using TempHumidityBackend.Types;
 
 namespace TempHumidityBackend.Handlers;
 
 public class AHT20DataHandler : IDataHandler
 {
-    private readonly ICBORDecodeService _cborDecodeService;
+    private readonly ICBORDecodeService<AHT20Reading> _cborDecodeService;
     private readonly ITempHumidityService _tempHumidityService;
     private readonly ILogger<AHT20DataHandler> _logger;
 
 
-    public AHT20DataHandler(ICBORDecodeService cborDecodeService, 
+    public AHT20DataHandler(ICBORDecodeService<AHT20Reading> cborDecodeService, 
                             ITempHumidityService tempHumidityService,
                             ILogger<AHT20DataHandler> logger)
     {
@@ -21,7 +22,7 @@ public class AHT20DataHandler : IDataHandler
 
     public async Task HandleData(byte[] data, CancellationToken cancellationToken = default)
     {
-        var decodedData = _cborDecodeService.DecodeAHT20Data(data);
+        var decodedData = _cborDecodeService.DecodeData(data);
 
         if (decodedData.HasValue)
         {
