@@ -1,7 +1,7 @@
 ﻿using System.Formats.Cbor;
 using TempHumidityBackend.Types;
 
-namespace TempHumidityBackend;
+namespace TempHumidityBackend.Services;
 
 public class AHT20DecodeService : ICBORDecodeService<AHT20Reading>
 {

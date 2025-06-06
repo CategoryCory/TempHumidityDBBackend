@@ -1,6 +1,6 @@
 ﻿using TempHumidityBackend.Models;
 
-namespace TempHumidityBackend;
+namespace TempHumidityBackend.Services;
 
 public interface ITempHumidityService
 {

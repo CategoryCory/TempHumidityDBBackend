@@ -1,7 +1,7 @@
 ﻿using TempHumidityBackend.Models;
 using TempHumidityBackend.Types;
 
-namespace TempHumidityBackend;
+namespace TempHumidityBackend.Maps;
 
 public static class Mappers
 {

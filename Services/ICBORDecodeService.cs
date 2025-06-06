@@ -1,6 +1,6 @@
 ﻿using TempHumidityBackend.Types;
 
-namespace TempHumidityBackend;
+namespace TempHumidityBackend.Services;
 
 public interface ICBORDecodeService<T> where T : class
 {
