@@ -9,8 +9,16 @@ using TempHumidityBackend.Workers;
 
 namespace TempHumidityBackend;
 
+/// <summary>
+/// Entry point for the TempHumidityBackend.
+/// Sets up dependency injection, HTTP client, and the background service.
+/// </summary>
 class Program
 {
+    /// <summary>
+    /// Application entry point.
+    /// </summary>
+    /// <param name="args">Command-line arguments.</param>
     public static void Main(string[] args)
     {
         var builder = Host.CreateApplicationBuilder(args);
@@ -22,7 +30,7 @@ class Program
         builder.Services.AddTransient<IUDPListenerWorker, UDPListenerWorker>();
         builder.Services.AddKeyedTransient<IDataHandler, AHT20DataHandler>("aht20");
 
-        builder.Services.AddHttpClient<ITempHumidityService, TempHumidityService>(client => 
+        builder.Services.AddHttpClient<ITempHumidityService, TempHumidityService>(client =>
         {
             client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]!);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -35,7 +43,7 @@ class Program
 
         try
         {
-            host.Run();    
+            host.Run();
         }
         catch (Exception e)
         {

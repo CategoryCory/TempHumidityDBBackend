@@ -7,17 +7,26 @@ using TempHumidityBackend.Handlers;
 
 namespace TempHumidityBackend.Workers;
 
+/// <summary>
+/// A concrete implementation of the <see cref="IUDPListenerWorker"/> class.
+/// </summary>
 public class UDPListenerWorker : IUDPListenerWorker
 {
     private readonly IConfiguration _config;
     private readonly ILogger<UDPListenerWorker> _logger;
 
+    /// <summary>
+    /// Constructs a new instance of the <see cref="UDPListenerWorker"/> class.
+    /// </summary>
+    /// <param name="config">The configuration object to use.</param>
+    /// <param name="logger">The logger instance.</param>
     public UDPListenerWorker(IConfiguration config, ILogger<UDPListenerWorker> logger)
     {
         _config = config;
         _logger = logger;
     }
 
+    /// <inheritdoc />
     public async Task StartListener(CancellationToken stoppingToken, IDataHandler dataHandler)
     {
         int listenPort = _config.GetValue<int>("UDPPort");

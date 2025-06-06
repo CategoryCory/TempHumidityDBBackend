@@ -3,12 +3,19 @@ using TempHumidityBackend.Types;
 
 namespace TempHumidityBackend.Services;
 
+/// <summary>
+/// A concrete implementation of the <see cref="ICBORDecodeService"/> interface.
+/// </summary>
 public class AHT20DecodeService : ICBORDecodeService<AHT20Reading>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AHT20DecodeService"/> class.
+    /// </summary>
     public AHT20DecodeService()
     {
     }
 
+    /// <inheritdoc />
     public CBORDecodeResult<AHT20Reading> DecodeData(byte[] encodedBytes)
     {
         try
@@ -31,7 +38,7 @@ public class AHT20DecodeService : ICBORDecodeService<AHT20Reading>
 
             cborReader.ReadEndMap();
 
-            var result = new AHT20Reading 
+            var result = new AHT20Reading
             {
                 TemperatureCelsius = tempValue,
                 RelativeHumidity = humidityValue,
@@ -45,9 +52,9 @@ public class AHT20DecodeService : ICBORDecodeService<AHT20Reading>
             string errorMessage = ex switch
             {
                 ArgumentOutOfRangeException => $"An argument was out of range when deserializing CBOR data:\n{ex.Message}",
-                InvalidOperationException   => $"An invalid operation occurred while deserializing CBOR data:\n{ex.Message}",
-                OverflowException           => $"An overflow exception occurred while deserializing CBOR data:\n{ex.Message}",
-                CborContentException        => $"A CBOR content error occurred while deserializing CBOR data:\n{ex.Message}",
+                InvalidOperationException => $"An invalid operation occurred while deserializing CBOR data:\n{ex.Message}",
+                OverflowException => $"An overflow exception occurred while deserializing CBOR data:\n{ex.Message}",
+                CborContentException => $"A CBOR content error occurred while deserializing CBOR data:\n{ex.Message}",
                 _ => $"An error occurred while deserializing CBOR data:\n{ex.Message}"
             };
 
